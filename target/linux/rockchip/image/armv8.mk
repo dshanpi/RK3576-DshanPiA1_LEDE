@@ -12,6 +12,18 @@ define Device/advantech_rsb4810
 endef
 TARGET_DEVICES += advantech_rsb4810
 
+define Device/100ask_dshanpi-r1
+  $(Device/rk3568)
+  DEVICE_VENDOR := 100ASK
+  DEVICE_MODEL := DShanPi R1
+  SOC := rk3568
+  DEVICE_DTS := rockchip/rk3568-100ask-dshanpi-r1
+  UBOOT_DEVICE_NAME := generic-rk3568
+  IMAGE/sysupgrade.img.gz := boot-common | boot-script | pine64-img | gzip | append-metadata
+  DEVICE_PACKAGES := kmod-ata-ahci-dwc -urngd
+endef
+TARGET_DEVICES += 100ask_dshanpi-r1
+
 define Device/ariaboard_photonicat
   DEVICE_VENDOR := Ariaboard
   DEVICE_MODEL := Photonicat

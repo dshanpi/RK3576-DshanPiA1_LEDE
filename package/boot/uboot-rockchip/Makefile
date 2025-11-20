@@ -286,6 +286,7 @@ define U-Boot/generic-rk3568
     hinlink_opc-h69k \
     lyt_t68m \
     nlnet_xiguapi-v3 \
+    100ask_dshanpi-r1 \
     seewo_sv21
 endef
 
