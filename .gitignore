@@ -16,6 +16,7 @@
 /overlay
 /package/feeds
 /package/openwrt-packages
+dl-bak/
 /*.patch
 key-build*
 *.orig
