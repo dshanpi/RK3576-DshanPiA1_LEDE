@@ -1,0 +1,53 @@
+--- a/include/soc/rockchip/utils.h	2025-11-23 03:35:07.695086227 +0800
++++ b/include/soc/rockchip/utils.h	2025-11-23 03:34:43.946599951 +0800
+@@ -50,6 +50,7 @@
+  *
+  * Return: the value, shifted into place, with the required write-enable bits
+  */
++#if 0
+ #define REG_UPDATE_WE(_val, _low, _high) ( \
+ 	BUILD_BUG_ON_ZERO(const_true((_low) > (_high))) + \
+ 	BUILD_BUG_ON_ZERO(const_true((_high) > 15)) + \
+@@ -57,6 +58,11 @@
+ 	BUILD_BUG_ON_ZERO(const_true((u64) (_val) > U16_MAX)) + \
+ 	((_val & GENMASK((_high) - (_low), 0)) << (_low) | \
+ 	(GENMASK((_high), (_low)) << 16)))
++#else
++#define REG_UPDATE_WE(_val, _low, _high) ( \
++	((_val & GENMASK((_high) - (_low), 0)) << (_low) | \
++	(GENMASK((_high), (_low)) << 16)))
++#endif
+ 
+ /**
+  * REG_UPDATE_BIT_WE - update a bit with a write-enable mask
+@@ -68,9 +74,14 @@
+  *
+  * Return: a value with bit @__bit set to @__val and @__bit << 16 set to ``1``
+  */
++#if 0
+ #define REG_UPDATE_BIT_WE(__val, __bit) ( \
+ 	BUILD_BUG_ON_ZERO(const_true((__val) > 1)) + \
+ 	BUILD_BUG_ON_ZERO(const_true((__val) < 0)) + \
+ 	REG_UPDATE_WE((__val), (__bit), (__bit)))
++#else
++#define REG_UPDATE_BIT_WE(__val, __bit) ( \
++	REG_UPDATE_WE((__val), (__bit), (__bit)))
++#endif
+ 
+ #endif /* __SOC_ROCKCHIP_UTILS_H__ */
+
+--- a/drivers/hwmon/pwm-fan.c	2025-11-28 01:42:42.383954321 +0800
++++ b/drivers/hwmon/pwm-fan.c	2025-11-28 01:46:39.149759259 +0800
+@@ -525,7 +525,10 @@
+ 		return -EINVAL;
+ 	}
+ 
+-	ctx->enable_mode = pwm_disable_reg_enable;
++	/* defaut mode as pwm_enable_reg_enable(to make speed as 0 when pwm=0):
++	 *     enable pwm; if pwm==0, keep pwm and regulator enabled
++	 */
++	ctx->enable_mode = pwm_enable_reg_enable;
+ 
+ 	/*
+ 	 * Set duty cycle to maximum allowed and enable PWM output as well as
+
